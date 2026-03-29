@@ -1,16 +1,26 @@
 package com.itaupj.produto.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
 
 @Entity
 public class ProdutoPj {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Nome Obrigatório") //Evita strings sem preencimento
     private String nome;
-    private Double preco;
+
+    @NotNull(message = "Necessário Preco")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Preco negativo") //ação que previne erro com valores negativos
+    @Column(precision = 15, scale = 2)
+    private BigDecimal preco;
+
+    @NotBlank(message = "Descricao obrigatória")
     private String descricao;
 
     public String getNome() {
@@ -29,11 +39,11 @@ public class ProdutoPj {
         this.id = id;
     }
 
-    public Double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(Double preco) {
+    public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 
