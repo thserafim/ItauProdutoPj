@@ -1,7 +1,8 @@
 package com.itaupj.produto.controller;
 import com.itaupj.produto.model.ProdutoPj;
 import com.itaupj.produto.repository.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.itaupj.produto.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -9,35 +10,32 @@ import java.util.List;
 @RequestMapping("/produtos")
 
 public class ProdutoController {
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    @GetMapping
-    public List<ProdutoPj> listarTodos(){   //MEU READ - LEITURA DE TODOS OS PRODUTOS
-        return produtoRepository.findAll(); //findall??
+    public ProdutoController(ProdutoService produtoService){
+        this.produtoService = produtoService;
     }
 
+    @GetMapping
+    public List<ProdutoPj> listarTodos(){ return produtoService.lstarTodos();}
+
     @PostMapping
-    public ProdutoPj criarProduto(@RequestBody ProdutoPj produto){
-        return produtoRepository.save(produto);
+    public ProdutoPj criarProduto(@Valid @RequestBody ProdutoPj produto){
+        return produtoService.criarProduto(produto);
     }
     @GetMapping("/{id}")
     public ProdutoPj buscarPorId(@PathVariable Long id){
-        return produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado!"));
+        return produtoService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public ProdutoPj atualizarProduto(@PathVariable Long id, @RequestBody ProdutoPj produto){
-        ProdutoPj existente = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
-        existente.setNome(produto.getNome());
-        existente.setPreco(produto.getPreco());
-        existente.setDescricao(produto.getDescricao());
-        return produtoRepository.save(existente);
+    public ProdutoPj atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoPj produto){
+        return produtoService.atualizarProduto(id, produto);
     }
 
     @DeleteMapping("/{id}")
     public void deletarProduto(@PathVariable Long id){
-        produtoRepository.deleteById(id);
+        produtoService.deletarProduto(id);
     }
 
 }
