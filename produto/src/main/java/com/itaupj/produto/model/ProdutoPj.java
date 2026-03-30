@@ -7,29 +7,24 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
+@Table (name = "produtos")
 public class ProdutoPj {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Nome Obrigatório") //Evita strings sem preencimento
+    @Column(nullable = false)
     private String nome;
 
     @NotNull(message = "Necessário Preco")
     @DecimalMin(value = "0.0", inclusive = true, message = "Preco negativo") //ação que previne erro com valores negativos
-    @Column(precision = 15, scale = 2)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal preco;
 
     @NotBlank(message = "Descricao obrigatória")
+    @Column(nullable = false)
     private String descricao;
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public Long getId() {
         return id;
@@ -37,6 +32,14 @@ public class ProdutoPj {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public BigDecimal getPreco() {
