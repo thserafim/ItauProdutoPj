@@ -1,4 +1,4 @@
-package com.itaupj.produto.exception;
+package com.thalespayments.produto.exception;
 
 import java.time.LocalDateTime;
 

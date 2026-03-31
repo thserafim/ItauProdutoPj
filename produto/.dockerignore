@@ -1,0 +1,10 @@
+target/*
+!target/produto-0.0.1-SNAPSHOT.jar
+.m2/
+.git/
+.idea/
+.vscode/
+build.log
+README.md
+assets/
+postman/

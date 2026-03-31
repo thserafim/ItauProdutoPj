@@ -1,4 +1,4 @@
-package com.itaupj.produto.model;
+package com.thalespayments.produto.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
