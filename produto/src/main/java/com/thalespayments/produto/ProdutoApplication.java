@@ -18,16 +18,28 @@ public class ProdutoApplication {
 
 	private static void configureDatasourceFromRenderEnvironment() {
 		String springDatasourceUrl = readEnv("SPRING_DATASOURCE_URL");
-		String jdbcDatabaseUrl = readEnv("JDBC_DATABASE_URL");
-		String renderDatabaseUrl = readEnv("DATABASE_URL");
+		if (!isBlank(springDatasourceUrl)) {
+			return;
+		}
 
-		if (isBlank(springDatasourceUrl) && isBlank(jdbcDatabaseUrl) && !isBlank(renderDatabaseUrl)) {
-			ParsedDatabaseUrl parsed = parseRenderDatabaseUrl(renderDatabaseUrl);
-			if (parsed != null && !isBlank(parsed.jdbcUrl)) {
-				System.setProperty("spring.datasource.url", parsed.jdbcUrl);
-				setSystemPropertyIfMissing("spring.datasource.username", parsed.username);
-				setSystemPropertyIfMissing("spring.datasource.password", parsed.password);
-			}
+		String jdbcDatabaseUrl = readEnv("JDBC_DATABASE_URL");
+		if (!isBlank(jdbcDatabaseUrl) && jdbcDatabaseUrl.toLowerCase().startsWith("jdbc:")) {
+			System.setProperty("spring.datasource.url", jdbcDatabaseUrl);
+			setSystemPropertyIfMissing("spring.datasource.username", readEnv("JDBC_DATABASE_USERNAME"));
+			setSystemPropertyIfMissing("spring.datasource.password", readEnv("JDBC_DATABASE_PASSWORD"));
+			return;
+		}
+
+		String renderDatabaseUrl = readEnv("DATABASE_URL");
+		if (isBlank(renderDatabaseUrl)) {
+			return;
+		}
+
+		ParsedDatabaseUrl parsed = parseRenderDatabaseUrl(renderDatabaseUrl);
+		if (parsed != null && !isBlank(parsed.jdbcUrl)) {
+			System.setProperty("spring.datasource.url", parsed.jdbcUrl);
+			setSystemPropertyIfMissing("spring.datasource.username", parsed.username);
+			setSystemPropertyIfMissing("spring.datasource.password", parsed.password);
 		}
 	}
 
